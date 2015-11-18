@@ -2,6 +2,7 @@
     "name": "tsotsi/laravel-library",
     "description": "model-validate",
     "type":"laravel-library",
+    "license": "MIT",
     "keywords":["laravel","validate","model"],
     "require": {
         "php": ">=5.4.0",
