@@ -67,7 +67,7 @@ class EventValidate
         $flag = true;
         $rules = $model::getRules($name);
         if (!empty($rules)) {
-            $validator = \Validator::make($model->getAttributes(), $rules, [], $model::getAttributesTrans());
+            $validator = \Validator::make($model->getAttributes(), $rules,trans('tsotsi::validate.messages'), $model::getAttributesTrans());
             if ($validator->fails())
             \Session::flash('errors',$validator->messages());
             return $validator->passes();

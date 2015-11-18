@@ -67,7 +67,6 @@ class ValidateModelCommand extends Command implements SelfHandling
             mkdir($dir, 0744, true);
         }
         if (!file_exists($file_path)) {
-            $content = '';
             $namespace = str_replace(app_path(), '', realpath($dir));
             $spaces = [
 
@@ -144,7 +143,12 @@ class ValidateModelCommand extends Command implements SelfHandling
                             array_walk($sets, function (&$v) {
                                 $v = trim($v, '\'"');
                             });
-                            $rule[] = 'in:' . implode(',', $sets);
+
+                            if(strcasecmp($type, 'set') == 0){
+                                $rule[] = 'sets:' . implode(',', $sets);
+                            }else{
+                                $rule[] = 'in:' . implode(',', $sets);
+                            }
                         }
                     }
                 }

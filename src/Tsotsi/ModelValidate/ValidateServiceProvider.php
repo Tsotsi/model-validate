@@ -13,7 +13,15 @@ class ValidateServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Validator::extend('sets', function ($attribute, $value, $parameters) {
+            $as = explode(',', $value);
+         return empty(array_diff($as,$parameters));
+        });
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'tsotsi');
 
+        $this->publishes([
+            __DIR__.'/../../lang' => base_path('resources/lang/vendor/tsotsi'),
+        ]);
 
     }
 
