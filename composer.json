@@ -1,0 +1,16 @@
+{
+    "name": "tsotsi/laravel-library",
+    "description": "model-validate",
+    "type":"laravel-library",
+    "require": {
+        "php": ">=5.4.0",
+        "composer/installers": "~1.0",
+        "illuminate/support": "5.*"
+    },
+    "authors": [
+        {
+            "name": "tsotsi",
+            "email": "tsotsi@tsotsi.cn"
+        }
+    ]
+}
