@@ -41,7 +41,7 @@ class ValidateModel extends Model
             return;
         }
         foreach ($last_events as $event) {
-            if (method_exists(EventValidate::class, $event)) {
+            if (is_callable(EventValidate::class.'::'.$event,true)) {
                 static::registerModelEvent($event, EventValidate::class . '@' . $event, $priority);
             }
         }

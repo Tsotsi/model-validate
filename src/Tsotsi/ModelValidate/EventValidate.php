@@ -11,54 +11,14 @@ namespace Tsotsi\ModelValidate;
 
 class EventValidate
 {
-    public static function creating($model)
-    {
-        return static::validate($model, 'creating');
-    }
 
-    public static function created($model)
+    public static function __callStatic($name,$parameters)
     {
-        return static::validate($model, 'created');
+        return static::validate($parameters[0],$name);
     }
-
-    public static function updating($model)
+    public function __call($name,$parameters)
     {
-        return static::validate($model, 'updating');
-    }
-
-    public static function updated($model)
-    {
-        return static::validate($model, 'updated');
-    }
-
-    public static function deleting($model)
-    {
-        return static::validate($model, 'deleting');
-    }
-
-    public static function deleted($model)
-    {
-        return static::validate($model, 'deleted');
-    }
-
-    public static function saving($model)
-    {
-        return static::validate($model, 'saving');
-    }
-
-    public static function saved($model)
-    {
-        return static::validate($model, 'saved');
-    }
-
-    public static function restoring($model)
-    {
-        return static::validate($model, 'restoring');
-    }
-
-    public static function restored($model)
-    {
-        return static::validate($model, 'restored');
+        return static::validate($parameters[0],$name);
     }
 
 
