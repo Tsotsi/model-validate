@@ -66,7 +66,6 @@ class ValidateModelCommand extends Command implements SelfHandling
         if (!is_dir($dir)) {
             mkdir($dir, 0744, true);
         }
-        @unlink($file_path);
         if (!file_exists($file_path)) {
             $content = '';
             $namespace = str_replace(app_path(), '', realpath($dir));
@@ -104,7 +103,6 @@ class ValidateModelCommand extends Command implements SelfHandling
             foreach ($res as $col) {
                 $columns[] = $col->Field;
                 $rule = [];
-//                $type = preg_replace('/\(.*\)$/', '', $col['Type']);
 
                 if ($col->Null == 'NO' && is_null($col->Default)) {
                     $rule[] = 'required';
