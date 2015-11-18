@@ -16,7 +16,7 @@
     ],
     "autoload":{
         "psr-0":{
-            "Tsotsi":"src"
+            "Tsotsi\\":"src"
         }
     }
 }
