@@ -1,12 +1,12 @@
 {
-    "name": "tsotsi/laravel-library",
+    "name": "tsotsi/model-validate",
     "description": "model-validate",
-    "type":"laravel-library",
+    "license": "MIT",
     "keywords":["laravel","validate","model"],
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "5.*"
+        "laravel/framework": "5.*"
     },
     "authors": [
         {
