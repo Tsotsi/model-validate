@@ -2,6 +2,7 @@
     "name": "tsotsi/laravel-library",
     "description": "model-validate",
     "type":"laravel-library",
+    "keywords":["laravel","validate","model"],
     "require": {
         "php": ">=5.4.0",
         "composer/installers": "~1.0",
@@ -12,5 +13,10 @@
             "name": "tsotsi",
             "email": "tsotsi@tsotsi.cn"
         }
-    ]
+    ],
+    "autoload":{
+        "psr-0":{
+            "Tsotsi":"src"
+        }
+    }
 }
