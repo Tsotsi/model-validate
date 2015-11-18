@@ -74,8 +74,6 @@ class ValidateModelCommand extends Command implements SelfHandling
 
             ];
             $base = \App::getNamespace();
-            $this->info($namespace);
-            $this->info($base . $namespace);
             while ($namespace_new = dirname($namespace)) {
                 if (($namespace_new == DIRECTORY_SEPARATOR || $namespace_new == '.') && ($namespace == DIRECTORY_SEPARATOR || $namespace == '.')) {
                     break;
@@ -85,7 +83,6 @@ class ValidateModelCommand extends Command implements SelfHandling
                 $namespace = $namespace_new;
 
             }
-//            array_unshift($spaces, 'App');
             $namespace = $base . implode($spaces, '\\');
 
             $res = \DB::select('SHOW FULL COLUMNS FROM `' . \DB::getTablePrefix() . $table . '`');
