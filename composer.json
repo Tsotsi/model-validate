@@ -1,5 +1,5 @@
 {
-    "name": "tsotsi/laravel-library",
+    "name": "tsotsi/model-validate",
     "description": "model-validate",
     "type":"laravel-library",
     "license": "MIT",
