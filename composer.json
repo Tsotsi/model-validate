@@ -3,6 +3,7 @@
     "description": "model-validate",
     "type":"laravel-library",
     "keywords":["laravel","validate","model"],
+    "license": "MIT",
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "5.*"
