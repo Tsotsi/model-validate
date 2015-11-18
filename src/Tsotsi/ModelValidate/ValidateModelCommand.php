@@ -180,7 +180,7 @@ class ValidateModelCommand extends Command implements SelfHandling
 
 namespace {$namespace};
 
-use App\Providers\ModelValidate\ValidateModel;
+use Tsotsi\ModelValidate\ValidateModel;
 class $basename extends ValidateModel
 {
     protected \$table='$table';
