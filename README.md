@@ -7,5 +7,10 @@ app.php
         Tsotsi\ModelValidate\ValidateServiceProvider::class,
       ]
 
+then
+
+     php artisan vendor:publish
+      
 console
-      make:v-model Models/T -t "t"
+
+     php artisan make:v-model Models/T -t "t"
