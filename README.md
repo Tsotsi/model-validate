@@ -6,3 +6,6 @@ app.php
       'providers'=>[
         Tsotsi\ModelValidate\ValidateServiceProvider::class,
       ]
+
+console
+      make:v-model Models/T -t "t"
