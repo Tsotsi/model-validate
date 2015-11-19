@@ -12,5 +12,7 @@ then
      php artisan vendor:publish
       
 console
-
+      //自定义表明
      php artisan make:v-model Models/T -t "t"
+     //强制替换
+     php artisan make:v-model Models/T -t "t" -f   
