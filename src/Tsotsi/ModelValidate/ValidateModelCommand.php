@@ -45,6 +45,12 @@ class ValidateModelCommand extends Command implements SelfHandling
                 't',
                 InputOption::VALUE_OPTIONAL,
                 '自定义表名',
+            ],
+            [
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                '自定义表名',
             ]
         ];
     }
@@ -59,12 +65,16 @@ class ValidateModelCommand extends Command implements SelfHandling
         //
         $validate_model = $this->argument('validate_model');
         $table = $this->option('table');
+        $is_force = $this->option('force');
         $basename = basename($validate_model);
         $table = empty($table) ? str_plural(camel_case($basename)) : $table;
         $file_path = app_path($validate_model . '.php');
         $dir = dirname($file_path);
         if (!is_dir($dir)) {
             mkdir($dir, 0744, true);
+        }
+        if ($is_force) {
+            @unlink($file_path);
         }
         if (!file_exists($file_path)) {
             $namespace = str_replace(app_path(), '', realpath($dir));
@@ -84,7 +94,6 @@ class ValidateModelCommand extends Command implements SelfHandling
             $namespace = $base . implode($spaces, '\\');
 
             $res = \DB::select('SHOW FULL COLUMNS FROM `' . \DB::getTablePrefix() . $table . '`');
-            $s = var_export($res, true);
             $match_table = [
                 'int' => 'integer',
                 'char' => 'string',
@@ -100,7 +109,7 @@ class ValidateModelCommand extends Command implements SelfHandling
             $columns = [];
             $parameters = [];
             foreach ($res as $col) {
-                $columns[] = $col->Field;
+                $columns[] = addslashes($col->Field);
                 $rule = [];
 
                 if ($col->Null == 'NO' && is_null($col->Default)) {
@@ -142,54 +151,61 @@ class ValidateModelCommand extends Command implements SelfHandling
                             $sets = explode(',', $size);
                             array_walk($sets, function (&$v) {
                                 $v = trim($v, '\'"');
+                                $v = addslashes($v);
                             });
 
-                            if(strcasecmp($type, 'set') == 0){
+                            if (strcasecmp($type, 'set') == 0) {
                                 $rule[] = 'sets:' . implode(',', $sets);
-                            }else{
+                            } else {
                                 $rule[] = 'in:' . implode(',', $sets);
                             }
                         }
                     }
                 }
 
-                $rule_str = '\'' . addslashes($col->Field) . '\'=>[[\'rule\' =>\'' . implode('|', $rule) . '\'';
+                $rule_str = '\'' . addslashes($col->Field) . '\' => [[\'rule\' => \'' . implode('|', $rule) . '\'';
                 if ($col->Extra == 'auto_increment') {
-                    $rule_str .= ', \'on\'=>\'updating\']]';
+                    $rule_str .= ', \'on\' => \'updating\']]';
                     array_pop($columns);
                 } else {
                     $rule_str .= ']]';
                 }
                 if ($col->Key == 'PRI' && $col->Field != 'id') {
-                    $parameters[] = 'protected $primaryKey=\'' . $col->Field . '\';';
+                    $parameters[] = 'protected $primaryKey = \'' . $col->Field . '\';';
                 }
                 $rules[] = $rule_str;
                 //comment
                 $attributes_trans[$col->Field] = empty($col->Comment) ? ucfirst(camel_case($col->Field)) : $col->Comment;
             }
-            $rules_str = '[' . PHP_EOL . implode(',' . PHP_EOL, $rules) . PHP_EOL . ']';//var_export($rules, true);
-            $attributes_trans_str = var_export($attributes_trans, true);
-            $columns_str = '[\'' . (implode('\',\'', $columns)) . '\']';
+            $rules_str = '[' . PHP_EOL . "\t\t" . implode(',' . PHP_EOL . "\t\t", $rules) . PHP_EOL . "\t" . ']';//var_export($rules, true);
+            array_walk($attributes_trans, function (&$v, $k) {
+                $v = '\'' . addslashes($k) . '\' => \'' . addslashes($v) . '\'';
+            });
+
+            $attributes_trans_str = '[' . PHP_EOL . "\t\t\t" . implode(',' . PHP_EOL . "\t\t\t", $attributes_trans) . PHP_EOL . "\t\t" . ']';
+            $columns_str = '[\'' . (implode('\', \'', $columns)) . '\']';
             if (!in_array('updated_at', $columns) || !in_array('created_at', $columns)) {
                 $parameters[] = 'public $timestamps=false;';
             }
-            $parameters_str = implode(PHP_EOL, $parameters) . PHP_EOL;
+            $parameters_str = implode(PHP_EOL . "\t", $parameters) . PHP_EOL;
             $model = <<<MODEL
 <?php
 
 namespace {$namespace};
 
 use Tsotsi\ModelValidate\ValidateModel;
+
 class $basename extends ValidateModel
 {
-    protected \$table='$table';
-    protected \$fillable=$columns_str;
+    protected \$table = '$table';
+    protected \$fillable = $columns_str;
     $parameters_str
     /**
-     * ['id'=>['rule'=>'required|integer','on'=>'saving']]
+     * ['id' => ['rule' => 'required|integer','on' => 'saving']]
      * @var array
      */
     protected static \$_rules = $rules_str;
+
     /**
      * @return array
      */
