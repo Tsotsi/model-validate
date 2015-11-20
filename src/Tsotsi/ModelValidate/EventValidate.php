@@ -24,15 +24,7 @@ class EventValidate
 
     public static function validate($model, $name)
     {
-        $flag = true;
-        $rules = $model::getRules($name);
-        if (!empty($rules)) {
-            $validator = \Validator::make($model->getAttributes(), $rules,trans('tsotsi::validate.messages'), $model::getAttributesTrans());
-            if ($validator->fails())
-             \Session::flash('errors', \Session::get('errors', new ViewErrorBag())->put('default',$validator->errors()));
-            return $validator->passes();
-        }
-        return $flag;
+        return $model->isValid($name);
     }
 
 }

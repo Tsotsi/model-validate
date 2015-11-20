@@ -14,7 +14,10 @@ use Illuminate\Support\Arr;
 
 class ValidateModel extends Model
 {
-
+    protected $_errors=[];
+    
+    protected $_is_error=false;
+    
     /**
      * ['id'=>['rule'=>'required|integer','on'=>'saving']]
      * @var array
@@ -90,6 +93,35 @@ class ValidateModel extends Model
         return [
 
         ];
+    }
+    
+    public function isValid($name){
+        $flag = true;
+        $rules = static::getRules($name);
+        if (!empty($rules)) {
+            $validator = \Validator::make($this->getAttributes(), $rules,trans('tsotsi::validate.messages'), static::getAttributesTrans());
+            if ($validator->fails()){
+             \Session::flash('errors', \Session::get('errors', new ViewErrorBag())->put('default',$validator->errors()));
+             $this->_errors=$validator->errors()->toArray();
+             $this->_is_error=true;
+            }
+            return $validator->passes();
+        }
+        return $flag;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getErrors(){
+        return $this->_errors;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isError(){
+        return $this->_is_error;
     }
 
 }
