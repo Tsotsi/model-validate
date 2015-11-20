@@ -216,12 +216,12 @@ class $basename extends ValidateModel
 }
 MODEL;
             if (false !== file_put_contents($file_path, $model)) {
-                $this->info('模型生成成功');
+                $this->info(trans('tsotsi::validate.model_create_success'));
             } else {
-                $this->error('模型生成失败');
+                $this->error(trans('tsotsi::validate.model_create_fail'));
             }
         } else {
-            $this->error('模型已经存在');
+            $this->error(trans('tsotsi::validate.model_already_exists'));
         }
 
     }
